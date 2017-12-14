@@ -18,6 +18,7 @@ class DraggableCard extends Component {
     this.resetPosition = this.resetPosition.bind(this)
     this.handlePan = this.handlePan.bind(this)
   }
+
   resetPosition () {
     const { x, y } = this.props.containerSize
     const card = ReactDOM.findDOMNode(this)
@@ -43,6 +44,7 @@ class DraggableCard extends Component {
       pristine: false
     })
   }
+
   panend (ev) {
     const screen = this.props.containerSize
     const card = ReactDOM.findDOMNode(this)
@@ -65,11 +67,12 @@ class DraggableCard extends Component {
       this.resetPosition()
       this.setState({ animation: true })
     }
-
   }
+
   panmove (ev) {
     this.setState(this.calculatePosition( ev.deltaX, ev.deltaY ))
   }
+
   pancancel (ev) {
     console.log(ev.type)
   }
