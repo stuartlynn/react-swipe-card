@@ -27,17 +27,18 @@ class Card extends Component {
   }
 
   render () {
-    const { initialPosition: { x, y } } = this.state
-    const { className = 'inactive' } = this.props
-    var style = {
+    const { props, state } = this;
+    const { initialPosition: { x, y } } = state;
+    const { active, className = 'inactive' } = props;
+    const style = {
       ...translate3d(x, y),
-      zIndex: this.props.index,
-      ...this.props.style
+      zIndex: props.index,
+      ...props.style
     }
 
     return (
-      <div style={style} className={`card ${className}`}>
-        {this.props.children}
+      <div style={style} className={`card ${className} ${active ? 'top-card' : ''}`}>
+        {props.children}
       </div>
     )
   }

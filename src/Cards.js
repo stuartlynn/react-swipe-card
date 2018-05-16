@@ -14,23 +14,21 @@ class SwipeCards extends Component {
       alertBottom: false,
       containerSize: { x: 0, y: 0 }
     };
-
-    this.removeCard = this.removeCard.bind(this)
-    this.setSize = this.setSize.bind(this)
-    this.renderChildren = this.renderChildren.bind(this);
-    this.renderDirections = this.renderDirections.bind(this);
   }
 
-  removeCard (side, cardId) {
+  removeCard = (side, cardId) => {
     const { children, onEnd } = this.props
-    setTimeout(() => this.setState({ [`alert${side}`]: false }), 300)
+    setTimeout(() => this.setState(state => ({...state, [`alert${side}`]: false })), 300)
     
-    if (children.length === (this.state.index + 1) && onEnd) onEnd()
+    if (children.length === (this.state.index + 1) && onEnd) {
+      onEnd();
+    }
 
-    this.setState({
-      index: this.state.index + 1,
+    this.setState(state => ({
+      ...state,
+      index: state.index + 1,
       [`alert${side}`]: true
-    })
+    }));
   }
   
   componentDidMount () {
@@ -42,7 +40,7 @@ class SwipeCards extends Component {
     window.removeEventListener('resize', this.setSize)
   }
 
-  setSize () {
+  setSize = () => {
     const container = ReactDOM.findDOMNode(this)
     if (!container) return;
 
@@ -50,10 +48,10 @@ class SwipeCards extends Component {
       x: container.offsetWidth,
       y: container.offsetHeight
     }
-    this.setState({ containerSize })
+    this.setState(state => ({ ...state,containerSize }));
   }
 
-  renderChildren() {
+  renderChildren = () => {
     const { props: { children }, state: { containerSize, index}} = this;
 
     return children.reduce((memo, c, i) => {
@@ -67,13 +65,13 @@ class SwipeCards extends Component {
           ...m, 
           [`onOutScreen${d}`]: () => this.removeCard(d) 
         }), {}),
-        active: index === i
+        active: index === i,
       }
       return [ cloneElement(c, props), ...memo ]
     }, []);
   }
 
-  renderDirections() {
+  renderDirections = () => {
     return DIRECTIONS.map(d =>
       <div 
         key={d} 
