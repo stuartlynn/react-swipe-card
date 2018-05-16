@@ -38,6 +38,8 @@ var SwipeCards = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (SwipeCards.__proto__ || Object.getPrototypeOf(SwipeCards)).call(this, props));
 
+    _initialiseProps.call(_this);
+
     _this.state = {
       index: 0,
       alertLeft: false,
@@ -46,34 +48,10 @@ var SwipeCards = function (_Component) {
       alertBottom: false,
       containerSize: { x: 0, y: 0 }
     };
-
-    _this.removeCard = _this.removeCard.bind(_this);
-    _this.setSize = _this.setSize.bind(_this);
-    _this.renderChildren = _this.renderChildren.bind(_this);
-    _this.renderDirections = _this.renderDirections.bind(_this);
     return _this;
   }
 
   _createClass(SwipeCards, [{
-    key: 'removeCard',
-    value: function removeCard(side, cardId) {
-      var _this2 = this;
-
-      var _props = this.props,
-          children = _props.children,
-          onEnd = _props.onEnd;
-
-      setTimeout(function () {
-        return _this2.setState(_defineProperty({}, 'alert' + side, false));
-      }, 300);
-
-      if (children.length === this.state.index + 1 && onEnd) onEnd();
-
-      this.setState(_defineProperty({
-        index: this.state.index + 1
-      }, 'alert' + side, true));
-    }
-  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.setSize();
@@ -83,61 +61,6 @@ var SwipeCards = function (_Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       window.removeEventListener('resize', this.setSize);
-    }
-  }, {
-    key: 'setSize',
-    value: function setSize() {
-      var container = _reactDom2.default.findDOMNode(this);
-      if (!container) return;
-
-      var containerSize = {
-        x: container.offsetWidth,
-        y: container.offsetHeight
-      };
-      this.setState({ containerSize: containerSize });
-    }
-  }, {
-    key: 'renderChildren',
-    value: function renderChildren() {
-      var _this3 = this;
-
-      var children = this.props.children,
-          _state = this.state,
-          containerSize = _state.containerSize,
-          index = _state.index;
-
-
-      return children.reduce(function (memo, c, i) {
-        if (index > i) return memo;
-
-        var props = _extends({
-          key: i,
-          containerSize: containerSize,
-          index: children.length - index
-        }, _utils.DIRECTIONS.reduce(function (m, d) {
-          return _extends({}, m, _defineProperty({}, 'onOutScreen' + d, function undefined() {
-            return _this3.removeCard(d);
-          }));
-        }, {}), {
-          active: index === i
-        });
-        return [(0, _react.cloneElement)(c, props)].concat(_toConsumableArray(memo));
-      }, []);
-    }
-  }, {
-    key: 'renderDirections',
-    value: function renderDirections() {
-      var _this4 = this;
-
-      return _utils.DIRECTIONS.map(function (d) {
-        return _react2.default.createElement(
-          'div',
-          {
-            key: d,
-            className: (_this4.state['alert' + d] ? 'alert-visible' : '') + ' alert-' + d.toLowerCase() + ' alert' },
-          _this4.props['alert' + d]
-        );
-      });
     }
   }, {
     key: 'render',
@@ -162,5 +85,81 @@ var SwipeCards = function (_Component) {
 
   return SwipeCards;
 }(_react.Component);
+
+var _initialiseProps = function _initialiseProps() {
+  var _this2 = this;
+
+  this.removeCard = function (side, cardId) {
+    var _props = _this2.props,
+        children = _props.children,
+        onEnd = _props.onEnd;
+
+    setTimeout(function () {
+      return _this2.setState(function (state) {
+        return _extends({}, state, _defineProperty({}, 'alert' + side, false));
+      });
+    }, 300);
+
+    if (children.length === _this2.state.index + 1 && onEnd) {
+      onEnd();
+    }
+
+    _this2.setState(function (state) {
+      return _extends({}, state, _defineProperty({
+        index: state.index + 1
+      }, 'alert' + side, true));
+    });
+  };
+
+  this.setSize = function () {
+    var container = _reactDom2.default.findDOMNode(_this2);
+    if (!container) return;
+
+    var containerSize = {
+      x: container.offsetWidth,
+      y: container.offsetHeight
+    };
+    _this2.setState(function (state) {
+      return _extends({}, state, { containerSize: containerSize });
+    });
+  };
+
+  this.renderChildren = function () {
+    var children = _this2.props.children,
+        _state = _this2.state,
+        containerSize = _state.containerSize,
+        index = _state.index;
+
+
+    return children.reduce(function (memo, c, i) {
+      if (index > i) return memo;
+
+      var props = _extends({
+        key: i,
+        containerSize: containerSize,
+        index: children.length - index
+      }, _utils.DIRECTIONS.reduce(function (m, d) {
+        return _extends({}, m, _defineProperty({}, 'onOutScreen' + d, function undefined() {
+          return _this2.removeCard(d);
+        }));
+      }, {}), {
+        active: index === i
+      });
+      return [(0, _react.cloneElement)(c, props)].concat(_toConsumableArray(memo));
+    }, []);
+  };
+
+  this.renderDirections = function () {
+    return _utils.DIRECTIONS.map(function (d) {
+      return _react2.default.createElement(
+        'div',
+        {
+          key: d,
+          className: (_this2.state['alert' + d] ? 'alert-visible' : '') + ' alert-' + d.toLowerCase() + ' alert' },
+        _this2.props['alert' + d]
+      );
+    });
+  };
+};
 
 exports.default = SwipeCards;

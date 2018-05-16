@@ -63,20 +63,23 @@ var Card = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _state$initialPositio = this.state.initialPosition,
+      var props = this.props,
+          state = this.state;
+      var _state$initialPositio = state.initialPosition,
           x = _state$initialPositio.x,
           y = _state$initialPositio.y;
-      var _props$className = this.props.className,
+      var active = props.active,
+          _props$className = props.className,
           className = _props$className === undefined ? 'inactive' : _props$className;
 
       var style = _extends({}, (0, _utils.translate3d)(x, y), {
-        zIndex: this.props.index
-      }, this.props.style);
+        zIndex: props.index
+      }, props.style);
 
       return _react2.default.createElement(
         'div',
-        { style: style, className: 'card ' + className },
-        this.props.children
+        { style: style, className: 'card ' + className + ' ' + (active ? 'top-card' : '') },
+        props.children
       );
     }
   }]);
