@@ -13,13 +13,12 @@ class DraggableCard extends Component {
       initialPosition: { x: 0, y: 0 },
       startPosition: { x: 0, y: 0 },
       animation: null,
-      pristine: true
+      pristine: true,
+      dragging: false,
     }
-    this.resetPosition = this.resetPosition.bind(this)
-    this.handlePan = this.handlePan.bind(this)
   }
 
-  resetPosition () {
+  resetPosition = () => {
     const { x, y } = this.props.containerSize
     const card = ReactDOM.findDOMNode(this)
 
@@ -28,21 +27,25 @@ class DraggableCard extends Component {
       y: Math.round((y - card.offsetHeight) / 2)
     }
 
-    this.setState({
+    this.setState(state => ({
+      ...state,
       x: initialPosition.x,
       y: initialPosition.y,
       initialPosition: initialPosition,
-      startPosition: { x: 0, y: 0 }
-    })
+      startPosition: { x: 0, y: 0 },
+      dragging: false,
+    }))
   }
   
   panstart () {
     const { x, y } = this.state
-    this.setState({
+    this.setState(state => ({
+      ...state,
       animation: false,
       startPosition: { x, y },
-      pristine: false
-    })
+      pristine: false,
+      dragging: true,
+    }))
   }
 
   panend (ev) {
@@ -65,7 +68,7 @@ class DraggableCard extends Component {
       this.props[`onOutScreen${direction}`](this.props.index)
     } else {
       this.resetPosition()
-      this.setState({ animation: true })
+      this.setState(state => ({...state, animation: true }));
     }
   }
 
@@ -77,7 +80,7 @@ class DraggableCard extends Component {
     console.log(ev.type)
   }
 
-  handlePan (ev) {
+  handlePan = (ev) => {
     ev.preventDefault()
     this[ev.type](ev)
     return false
@@ -104,6 +107,7 @@ class DraggableCard extends Component {
     this.resetPosition()
     window.addEventListener('resize', this.resetPosition)
   }
+
   componentWillUnmount () {
     if (this.hammer) {
       this.hammer.stop()
@@ -112,10 +116,18 @@ class DraggableCard extends Component {
     }
     window.removeEventListener('resize', this.resetPosition)
   }
+
+  setCardClassName = (animation, dragging) => {
+    return `${animation ? 'animate' : ''} ${dragging ? 'dragging' : ''}`;
+    
+  }
+
   render () {
-    const { x, y, animation, pristine } = this.state
+    const { props, setCardClassName, state } = this;
+    const { x, y, animation, pristine, dragging } = state
     const style = translate3d(x, y)
-    return <SimpleCard {...this.props} style={style} className={animation ? 'animate' : pristine ? 'inactive' : '' } />
+
+    return <SimpleCard {...props} style={style} className={setCardClassName(animation, dragging)} />
   }
 }
 

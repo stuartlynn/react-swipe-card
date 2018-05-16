@@ -42,51 +42,65 @@ var DraggableCard = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (DraggableCard.__proto__ || Object.getPrototypeOf(DraggableCard)).call(this, props));
 
-    _this.state = {
-      x: 0,
-      y: 0,
-      initialPosition: { x: 0, y: 0 },
-      startPosition: { x: 0, y: 0 },
-      animation: null,
-      pristine: true
-    };
-    _this.resetPosition = _this.resetPosition.bind(_this);
-    _this.handlePan = _this.handlePan.bind(_this);
-    return _this;
-  }
+    _this.resetPosition = function () {
+      var _this$props$container = _this.props.containerSize,
+          x = _this$props$container.x,
+          y = _this$props$container.y;
 
-  _createClass(DraggableCard, [{
-    key: 'resetPosition',
-    value: function resetPosition() {
-      var _props$containerSize = this.props.containerSize,
-          x = _props$containerSize.x,
-          y = _props$containerSize.y;
-
-      var card = _reactDom2.default.findDOMNode(this);
+      var card = _reactDom2.default.findDOMNode(_this);
 
       var initialPosition = {
         x: Math.round((x - card.offsetWidth) / 2),
         y: Math.round((y - card.offsetHeight) / 2)
       };
 
-      this.setState({
-        x: initialPosition.x,
-        y: initialPosition.y,
-        initialPosition: initialPosition,
-        startPosition: { x: 0, y: 0 }
+      _this.setState(function (state) {
+        return _extends({}, state, {
+          x: initialPosition.x,
+          y: initialPosition.y,
+          initialPosition: initialPosition,
+          startPosition: { x: 0, y: 0 },
+          dragging: false
+        });
       });
-    }
-  }, {
+    };
+
+    _this.handlePan = function (ev) {
+      ev.preventDefault();
+      _this[ev.type](ev);
+      return false;
+    };
+
+    _this.setCardClassName = function (animation, dragging) {
+      return (animation ? 'animate' : '') + ' ' + (dragging ? 'dragging' : '');
+    };
+
+    _this.state = {
+      x: 0,
+      y: 0,
+      initialPosition: { x: 0, y: 0 },
+      startPosition: { x: 0, y: 0 },
+      animation: null,
+      pristine: true,
+      dragging: false
+    };
+    return _this;
+  }
+
+  _createClass(DraggableCard, [{
     key: 'panstart',
     value: function panstart() {
       var _state = this.state,
           x = _state.x,
           y = _state.y;
 
-      this.setState({
-        animation: false,
-        startPosition: { x: x, y: y },
-        pristine: false
+      this.setState(function (state) {
+        return _extends({}, state, {
+          animation: false,
+          startPosition: { x: x, y: y },
+          pristine: false,
+          dragging: true
+        });
       });
     }
   }, {
@@ -118,7 +132,9 @@ var DraggableCard = function (_Component) {
         this.props['onOutScreen' + direction](this.props.index);
       } else {
         this.resetPosition();
-        this.setState({ animation: true });
+        this.setState(function (state) {
+          return _extends({}, state, { animation: true });
+        });
       }
     }
   }, {
@@ -130,13 +146,6 @@ var DraggableCard = function (_Component) {
     key: 'pancancel',
     value: function pancancel(ev) {
       console.log(ev.type);
-    }
-  }, {
-    key: 'handlePan',
-    value: function handlePan(ev) {
-      ev.preventDefault();
-      this[ev.type](ev);
-      return false;
     }
   }, {
     key: 'handleSwipe',
@@ -180,14 +189,18 @@ var DraggableCard = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _state2 = this.state,
-          x = _state2.x,
-          y = _state2.y,
-          animation = _state2.animation,
-          pristine = _state2.pristine;
+      var props = this.props,
+          setCardClassName = this.setCardClassName,
+          state = this.state;
+      var x = state.x,
+          y = state.y,
+          animation = state.animation,
+          pristine = state.pristine,
+          dragging = state.dragging;
 
       var style = (0, _utils.translate3d)(x, y);
-      return _react2.default.createElement(_SimpleCard2.default, _extends({}, this.props, { style: style, className: animation ? 'animate' : pristine ? 'inactive' : '' }));
+
+      return _react2.default.createElement(_SimpleCard2.default, _extends({}, props, { style: style, className: setCardClassName(animation, dragging) }));
     }
   }]);
 
