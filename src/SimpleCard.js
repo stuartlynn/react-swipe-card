@@ -26,6 +26,19 @@ class Card extends Component {
     window.removeEventListener('resize', this.setInitialPosition)
   }
 
+  renderChildren() {
+    const { props } = this;
+    const {active, childCount, children, index } = props;
+
+    return React.Children.map(children, c => {
+      const passedProps = {
+        active: active.toString(),
+        cardcount: childCount,
+      }
+      return React.cloneElement(c, passedProps);
+    });
+  }
+
   render () {
     const { props, state } = this;
     const { initialPosition: { x, y } } = state;
@@ -38,7 +51,7 @@ class Card extends Component {
 
     return (
       <div style={style} className={`card ${className} ${active ? 'top-card' : ''}`}>
-        {props.children}
+        {this.renderChildren()}
       </div>
     )
   }

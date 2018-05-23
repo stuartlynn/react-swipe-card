@@ -60,6 +60,7 @@ class SwipeCards extends Component {
       const props = {
         key: i,
         containerSize,
+        childCount: children.length,
         index: children.length - index,
         ...DIRECTIONS.reduce((m, d) => ({ 
           ...m, 
@@ -72,13 +73,15 @@ class SwipeCards extends Component {
   }
 
   renderDirections = () => {
-    return DIRECTIONS.map(d =>
+    return DIRECTIONS.map(d =>{
+      return (
       <div 
         key={d} 
         className={`${this.state[`alert${d}`] ? 'alert-visible': ''} alert-${d.toLowerCase()} alert`}>
         {this.props[`alert${d}`]}
       </div>
-    );
+      );
+    });
   }
 
   render () {
