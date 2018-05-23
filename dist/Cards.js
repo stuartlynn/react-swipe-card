@@ -137,6 +137,7 @@ var _initialiseProps = function _initialiseProps() {
       var props = _extends({
         key: i,
         containerSize: containerSize,
+        childCount: children.length,
         index: children.length - index
       }, _utils.DIRECTIONS.reduce(function (m, d) {
         return _extends({}, m, _defineProperty({}, 'onOutScreen' + d, function undefined() {

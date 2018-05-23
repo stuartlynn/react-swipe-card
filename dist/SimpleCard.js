@@ -61,6 +61,24 @@ var Card = function (_Component) {
       window.removeEventListener('resize', this.setInitialPosition);
     }
   }, {
+    key: 'renderChildren',
+    value: function renderChildren() {
+      var props = this.props;
+      var active = props.active,
+          childCount = props.childCount,
+          children = props.children,
+          index = props.index;
+
+
+      return _react2.default.Children.map(children, function (c) {
+        var passedProps = {
+          active: active.toString(),
+          cardcount: childCount
+        };
+        return _react2.default.cloneElement(c, passedProps);
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var props = this.props,
@@ -79,7 +97,7 @@ var Card = function (_Component) {
       return _react2.default.createElement(
         'div',
         { style: style, className: 'card ' + className + ' ' + (active ? 'top-card' : '') },
-        props.children
+        this.renderChildren()
       );
     }
   }]);
