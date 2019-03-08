@@ -1,10 +1,10 @@
 {
-  "name": "react-swipe-card",
+  "name": "@piyushimraw/react-swipe-card",
   "version": "0.1.8",
   "description": "Tinder style swipe cards",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexandre-garrec/react-swipe-card.git"
+    "url": "git+https://github.com/piyushimraw/react-swipe-card.git"
   },
   "main": "dist/index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "rilize": "$(npm bin)/release-it --github.releaseName=\"%s (`$(npm bin)/superheroes`)\"",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
-  "author": "Alexandre Garrec <garrec.alexandre@gmail.com>",
+  "author": "Piyush Shrivastava <piyush.srivastavaimraw@gmail.com>",
   "license": "MIT",
   "keywords": [
     "react",
